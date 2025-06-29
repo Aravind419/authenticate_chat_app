@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connect Together - Real-Time Chat</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet" />
+  </head>
+  <body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <h2>Connect Together</h2>
+        <p>Connecting to chat server...</p>
+      </div>
+    </div>
+
+    <!-- User Registration Modal -->
+    <div id="registrationModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2><i class="fas fa-user-plus"></i> Join Connect Together</h2>
+          <p>Enter your details to start chatting</p>
+        </div>
+        <form id="registrationForm" class="registration-form">
+          <div class="input-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Enter your username"
+              required
+              minlength="3"
+              maxlength="20" />
+          </div>
+          <div class="input-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              name="phoneNumber"
+              placeholder="+1234567890"
+              required />
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt"></i> Send OTP
+          </button>
+          <div class="auth-switch">
+            <p>Already have an account? <a href="#" id="loginLink">Login</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- OTP Verification Modal -->
+    <div id="otpModal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2><i class="fas fa-mobile-alt"></i> Verify Phone Number</h2>
+          <p>Enter the 6-digit code sent to your phone</p>
+        </div>
+        <form id="otpForm" class="otp-form">
+          <div class="otp-input-group">
+            <label for="otp1" class="sr-only">OTP Digit 1</label>
+            <input
+              type="text"
+              id="otp1"
+              class="otp-input"
+              maxlength="1"
+              placeholder="0"
+              autocomplete="off" />
+            <label for="otp2" class="sr-only">OTP Digit 2</label>
+            <input
+              type="text"
+              id="otp2"
+              class="otp-input"
+              maxlength="1"
+              placeholder="0"
+              autocomplete="off" />
+            <label for="otp3" class="sr-only">OTP Digit 3</label>
+            <input
+              type="text"
+              id="otp3"
+              class="otp-input"
+              maxlength="1"
+              placeholder="0"
+              autocomplete="off" />
+            <label for="otp4" class="sr-only">OTP Digit 4</label>
+            <input
+              type="text"
+              id="otp4"
+              class="otp-input"
+              maxlength="1"
+              placeholder="0"
+              autocomplete="off" />
+            <label for="otp5" class="sr-only">OTP Digit 5</label>
+            <input
+              type="text"
+              id="otp5"
+              class="otp-input"
+              maxlength="1"
+              placeholder="0"
+              autocomplete="off" />
+            <label for="otp6" class="sr-only">OTP Digit 6</label>
+            <input
+              type="text"
+              id="otp6"
+              class="otp-input"
+              maxlength="1"
+              placeholder="0"
+              autocomplete="off" />
+          </div>
+          <div class="otp-timer">
+            <span id="otpTimer"
+              >Resend OTP in <span id="timerCount">60</span>s</span
+            >
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-check"></i> Verify OTP
+          </button>
+          <button
+            type="button"
+            id="resendOtpBtn"
+            class="btn btn-secondary"
+            disabled>
+            <i class="fas fa-redo"></i> Resend OTP
+          </button>
+          <div class="auth-switch">
+            <p><a href="#" id="backToRegister">Back to Registration</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2><i class="fas fa-sign-in-alt"></i> Login to Connect Together</h2>
+          <p>Enter your phone number to login</p>
+        </div>
+        <form id="loginForm" class="login-form">
+          <div class="input-group">
+            <label for="loginPhoneNumber">Phone Number</label>
+            <input
+              type="tel"
+              id="loginPhoneNumber"
+              name="phoneNumber"
+              placeholder="+1234567890"
+              required />
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Send Login OTP
+          </button>
+          <div class="auth-switch">
+            <p>
+              Don't have an account? <a href="#" id="registerLink">Register</a>
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Main Chat Interface -->
+    <div id="chatInterface" class="chat-interface hidden">
+      <!-- Header -->
+      <header class="chat-header">
+        <div class="header-left">
+          <h1><i class="fas fa-comments"></i> Connect Together</h1>
+          <div class="user-info">
+            <span id="currentUsername"></span>
+            <span id="userStatus" class="status-indicator online"></span>
+          </div>
+        </div>
+        <div class="header-right">
+          <button id="logoutBtn" class="btn btn-secondary">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <div class="chat-container">
+        <!-- Sidebar - User List -->
+        <aside class="chat-sidebar">
+          <div class="sidebar-header">
+            <h3><i class="fas fa-users"></i> Recent Chats</h3>
+            <div class="search-box">
+              <input
+                type="text"
+                id="userSearch"
+                placeholder="Search users..." />
+              <i class="fas fa-search"></i>
+            </div>
+          </div>
+          <div class="user-list" id="userList">
+            <!-- Users will be populated here -->
+          </div>
+        </aside>
+
+        <!-- Chat Area -->
+        <main class="chat-main">
+          <!-- Chat Header -->
+          <div class="chat-header-main">
+            <div class="chat-user-info">
+              <div class="user-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="user-details">
+                <h3 id="chatUserName">Select a user to start chatting</h3>
+                <p id="chatUserStatus">Choose from the user list</p>
+              </div>
+            </div>
+            <div class="chat-actions">
+              <button id="audioCallBtn" class="btn btn-icon" title="Audio Call">
+                <i class="fas fa-phone"></i>
+              </button>
+              <button id="videoCallBtn" class="btn btn-icon" title="Video Call">
+                <i class="fas fa-video"></i>
+              </button>
+              <button
+                id="moreOptionsBtn"
+                class="btn btn-icon"
+                title="More Options">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Messages Area -->
+          <div class="messages-container">
+            <div class="messages" id="messages">
+              <!-- Messages will be populated here -->
+            </div>
+            <div id="typingIndicator" class="typing-indicator hidden">
+              <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <span>typing...</span>
+            </div>
+          </div>
+
+          <!-- Message Input -->
+          <div class="message-input-container">
+            <div class="message-input-wrapper">
+              <button id="attachBtn" class="btn btn-icon" title="Attach File">
+                <i class="fas fa-paperclip"></i>
+              </button>
+              <input
+                type="file"
+                id="fileInput"
+                accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt"
+                hidden />
+              <div class="message-input">
+                <textarea
+                  id="messageInput"
+                  placeholder="Type a message..."
+                  rows="1"></textarea>
+                <button id="emojiBtn" class="btn btn-icon" title="Emoji">
+                  <i class="fas fa-smile"></i>
+                </button>
+              </div>
+              <button
+                id="sendBtn"
+                class="btn btn-primary"
+                disabled
+                title="Send Message">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Call Modal -->
+    <div id="callModal" class="modal hidden">
+      <div class="modal-content call-modal">
+        <div class="call-header">
+          <h3 id="callTitle">Incoming Call</h3>
+          <p id="callDescription">Someone is calling you...</p>
+        </div>
+        <div class="call-actions">
+          <button id="acceptCallBtn" class="btn btn-success">
+            <i class="fas fa-phone"></i> Accept
+          </button>
+          <button id="declineCallBtn" class="btn btn-danger">
+            <i class="fas fa-phone-slash"></i> Decline
+          </button>
+        </div>
+        <div class="call-video-container hidden" id="callVideoContainer">
+          <video id="localVideo" autoplay muted></video>
+          <video id="remoteVideo" autoplay></video>
+          <button
+            id="endCallBtn"
+            class="btn btn-danger call-end-btn"
+            title="End Call">
+            <i class="fas fa-phone-slash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Emoji Picker -->
+    <div id="emojiPicker" class="emoji-picker hidden">
+      <div class="emoji-grid">
+        <button class="emoji-btn" data-emoji="❤️">❤️</button>
+        <button class="emoji-btn" data-emoji="😂">😂</button>
+        <button class="emoji-btn" data-emoji="👍">👍</button>
+        <button class="emoji-btn" data-emoji="👎">👎</button>
+        <button class="emoji-btn" data-emoji="😮">😮</button>
+        <button class="emoji-btn" data-emoji="😢">😢</button>
+        <button class="emoji-btn" data-emoji="😡">😡</button>
+        <button class="emoji-btn" data-emoji="🎉">🎉</button>
+        <button class="emoji-btn" data-emoji="👏">👏</button>
+        <button class="emoji-btn" data-emoji="🙏">🙏</button>
+      </div>
+    </div>
+
+    <!-- Message Context Menu -->
+    <div id="messageContextMenu" class="context-menu hidden">
+      <button class="context-menu-item" id="editMessageBtn">
+        <i class="fas fa-edit"></i> Edit
+      </button>
+      <button class="context-menu-item" id="deleteMessageBtn">
+        <i class="fas fa-trash"></i> Delete
+      </button>
+      <button class="context-menu-item" id="reactMessageBtn">
+        <i class="fas fa-heart"></i> React
+      </button>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification hidden">
+      <div class="notification-content">
+        <i class="notification-icon"></i>
+        <span class="notification-message"></span>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+  </body>
+</html>
